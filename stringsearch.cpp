@@ -7,7 +7,7 @@
 
 #define filename "input.txt"
 
-size_t num_threads = 0;
+size_t num_threads = 4;
 
 struct threat_result {
     size_t count = 0;
@@ -71,89 +71,39 @@ size_t search_pattern_mt(const std::string& text,
     return total_count;
 }
 
-// int main() {
-//     // load file in to string
-//     std::ifstream in(filename);
+int main() {
+    // load input file
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        std::cerr << "Error opening file: " << filename << std::endl;
+        return 1;
+    }
 
-//     if (!in) {
-//         std::cerr << "Unable to open file " << filename << std::endl;
-//         return 1;
-//     }
+    std::string text((std::istreambuf_iterator<char>(file)),
+                     std::istreambuf_iterator<char>());
+    
+    std::vector<std::string> patterns = {
+        "bee", "hi"
+    };
 
-//     std::string text((std::istreambuf_iterator<char>(in)),
-//                       std::istreambuf_iterator<char>());
+    for (const auto& pattern : patterns) {
+        // start timer
+        auto start_time = std::chrono::high_resolution_clock::now();
 
+        // count pattern occurrences
+        size_t count = search_pattern_mt(text, pattern, num_threads);
 
-//     // pattern list
-//     std::vector<std::string> patterns = {"test", "bee"};
+        // stop timer
+        auto end_time = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double, std::milli> duration = end_time - start_time;
 
-//     // split data set
-//     // get max length for each pattern
-//     size_t max_pattern_len = 0;
-//     for (auto& p : patterns)
-//         max_pattern_len = std::max(max_pattern_len, p.size());
+        // output results
+        std::cout << "Pattern: \"" << pattern << "\" "
+                  << "Count: " << count << " "
+                  << "Time: " << duration.count() << " ms"
+                  << std::endl;
+    }
 
-//     // split text in chunks for each thread
-//     size_t text_size = text.size();
-//     size_t chunk_size = text_size / num_threads;
+    return 0;
 
-//     // temp storage for each thread result
-//     std::vector<std::thread> threads;
-//     std::vector<threat_result> count(num_threads);
-
-//     // start timer
-//     auto start_time = std::chrono::high_resolution_clock::now();
-
-//     // launch threads
-//     for (int i = 0; i < num_threads; i++) {
-//         size_t start = i * chunk_size;
-//         size_t end = (i == num_threads - 1) ? text_size : start + chunk_size;
-
-//         // add overlap to start
-//         if (i > 0) {
-//             if (start >= max_pattern_len - 1) {
-//                 start -= (max_pattern_len - 1);
-//             } 
-//             else {
-//                 start = 0;
-//             }
-//         }
-
-//         threads.emplace_back([&, i, start, end]() {
-//             size_t local_count = 0;
-
-//             for (const auto& patern : patterns) {
-//                 size_t pos = text.find(patern, start);
-//                 while (pos != std::string::npos && pos < end) {
-//                     local_count++;
-//                     pos = text.find(patern, pos + 1);
-//                 }
-//             }
-
-//             count[i].count = local_count;
-
-//         });
-//     }
-
-//     // wait for all threads to finish
-//     for (auto& t : threads) {
-//         t.join();
-//     }
-
-//     size_t total_count = 0;
-//     for (const auto& res : count) {
-//         total_count += res.count;
-//     }
-
-//     // stop timer
-//     auto end_time = std::chrono::high_resolution_clock::now();
-//     std::chrono::duration<double> elapsed = end_time - start_time;
-
-
-//     // print results
-//     std::cout << "Total occurrences: " << total_count << std::endl;
-//     std::cout << "Elapsed time: " << elapsed.count() << " seconds" << std::endl;
-
-//     return 0;
-// }
-
+}
