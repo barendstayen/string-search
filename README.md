@@ -1,0 +1,2 @@
+# String Search C++
+This is a simple C++ program that implements a basic string search algorithm. The program is multitreaded to improve performance when searching through large texts. It will split the text into multiple segments and search each segment in a separate thread. To prevent border issues, each segment will have an overlap with the next segment. The input file and search pattern can be modified in the code.
