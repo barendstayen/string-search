@@ -5,9 +5,9 @@
 #include <thread>
 #include <chrono>
 
-#define filename "input.txt"
+#define filename "/home/barend/Documents/school/Canada/359/string-search/data_small.txt"
 
-size_t num_threads = 4;
+size_t num_threads = 1;
 
 struct threat_result {
     size_t count = 0;
@@ -83,7 +83,18 @@ int main() {
                      std::istreambuf_iterator<char>());
     
     std::vector<std::string> patterns = {
-        "bee", "hi"
+        "parallel",
+        "pattern",
+        "search",
+        "algorithm",
+        "text",
+        "cpu",
+        "data",
+        "string",
+        "partition",
+        "worker",
+        "overlap",
+        "boundary"
     };
 
     for (const auto& pattern : patterns) {
