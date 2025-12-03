@@ -1,0 +1,24 @@
+In computer science, string search is one of the most fundamental operations. Whether we are scanning log files, parsing biological data, analyzing documents, or processing sensor streams, the ability to find a specific pattern in a large volume of text is extremely important. Sequential string search is simple but becomes slow for large datasets.
+
+This project explores a parallelized approach to string search for many-core CPUs. Dividing the text among workers can speed up processing, but introduces challenges. The most important challenge is the boundary problem. If a pattern straddles the edge between two partitions, naive chunking will miss it. To address this, we extend each partition by m-1 characters where m is pattern length. The worker scans the extended slice but only reports matches inside its true responsibility region.
+
+Parallel computing has long been applied to text processing. For example, MapReduce splits huge datasets into small pieces and distributes processing across many nodes. Modern CPUs also perform parallelism at a smaller scale with multiple cores, SIMD instructions, and GPU acceleration. Python makes it easy to distribute CPU-bound tasks using multiprocessing. We used ProcessPoolExecutor to spawn multiple workers and join results.
+
+Experimentation is essential. We ran search tests on small, medium, and large datasets with various patterns. The large dataset demonstrates scale and stress testing. To ensure matches exist across chunk boundaries, the dataset contains repeated examples of key terms such as "parallel", "pattern", "algorithm", and "search". Some occurrences deliberately cross artificial text boundaries so that the implementation must detect them.
+
+To fully test scaling, the large dataset repeats core concepts and phrases many times. The text is intentionally lengthy to emulate real workloads. Parallel systems benefit most when input is very long. We repeat multiple sections to ensure workers receive enough data to process.
+
+--- REPEATED SECTION START ---
+Parallel computing is a method of solving problems by dividing tasks among multiple cores. When we search for a pattern, the naive sequential algorithm checks each index in the text. Parallelization partitions the input. However, if we ignore boundary overlap, we can lose matches. The solution is simple: each worker searches a slightly larger region. Using the pattern length to compute overlap ensures correctness.
+
+Many-core CPUs are widely available. Eight-core desktop processors are common. Sixteen-core workstation processors provide strong parallel performance. When the parallel search runs, each worker receives a chunk of text. Pattern matches are checked locally. Results are merged and sorted. A properly designed chunking strategy guarantees that each match is reported exactly once.
+
+Python’s ProcessPoolExecutor avoids the GIL. The worker function receives only the slice and metadata. It scans the slice using pattern search operations. After processing, the results are returned. The main thread merges them. This produces a complete set of match indices. Benchmarks show that performance improves as worker count increases, but only past a certain input size. Overhead is always present.
+--- REPEATED SECTION END ---
+
+Repeat this repeated section multiple times. Parallel computing is a method of solving problems by dividing tasks among multiple cores. When we search for a pattern, the naive sequential algorithm checks each index in the text. Parallelization partitions the input. However, if we ignore boundary overlap, we can lose matches. The solution is simple: each worker searches a slightly larger region. Using the pattern length to compute overlap ensures correctness.
+
+Many-core CPUs are widely available. Eight-core desktop processors are common. Sixteen-core workstation processors provide strong parallel performance.
+
+Repeat this entire repeated section until the file is very long. Add more copies if needed.
+End of large dataset.
