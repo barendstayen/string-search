@@ -5,7 +5,7 @@
 #include <thread>
 #include <chrono>
 
-#define filename "/home/barend/Documents/school/Canada/359/string-search/data_small.txt"
+#define filename "data_large.txt"
 
 size_t num_threads = 1;
 
